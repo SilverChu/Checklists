@@ -80,6 +80,7 @@ class ChecklistViewController: UITableViewController {
         return cell
     }
     
+    // This method toggle the checkmark at where you tapped with animation.
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath) {
             let item = items[indexPath.row]
@@ -88,6 +89,14 @@ class ChecklistViewController: UITableViewController {
             configureCheckmark(for: cell, with: item)
         }
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    // This method delete the cell where you swiped.
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        items.remove(at: indexPath.row)
+        
+        let indexPaths = [indexPath]
+        tableView.deleteRows(at: indexPaths, with: .automatic)
     }
     
     // Toggle the checkmark
