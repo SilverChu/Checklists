@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  ChecklistViewController.swift
 //  Checklists
 //
 //  Created by Silver Chu on 2017/5/25.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ChecklistViewController: UITableViewController {
+class ChecklistViewController: UITableViewController, AddItemViewControllerDelegate {
     var items: [ChecklistItem]
 
     override func viewDidLoad() {
@@ -52,17 +52,29 @@ class ChecklistViewController: UITableViewController {
         super.init(coder: aDecoder)
     }
     
-    @IBAction func addItem() {
+    //The following two methods implement from AddItemViewControllerDelegate protocol.
+    func addItemViewControllerDidCancel(_ controller: AddItemViewController) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func addItemViewController(_ controller: AddItemViewController, didFinishAdding item: ChecklistItem) {
         let newRowIndex = items.count
-        
-        let item = ChecklistItem()
-        item.text = "I am a new row"
-        item.checked = true
         items.append(item)
         
         let indexPath = IndexPath(row: newRowIndex, section: 0)
         let indexPaths = [indexPath]
         tableView.insertRows(at: indexPaths, with: .automatic)
+        
+        dismiss(animated: true, completion: nil)
+    }
+    
+    // Prepare-for-segue
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "AddItem" {
+            let navigationController = segue.destination as! UINavigationController
+            let controller = navigationController.topViewController as! AddItemViewController
+            controller.delegate = self
+        }
     }
     
     // This method tells how many rows are in the table.
