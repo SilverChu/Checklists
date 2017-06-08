@@ -9,12 +9,13 @@
 import UIKit
 
 class ChecklistViewController: UITableViewController, ItemDetailViewControllerDelegate {
-    // Array which stores ChecklistItem, and the index correspond to the row.
-    var items: [ChecklistItem]
+    var items: [ChecklistItem] // Array which stores ChecklistItem, and the index correspond to the row.
+    var checklist: Checklist!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        title = checklist.name
     }
 
     override func didReceiveMemoryWarning() {
