@@ -122,6 +122,7 @@ class ChecklistViewController: UITableViewController, ItemDetailViewControllerDe
     // Toggle the checkmark
     func configureCheckmark(for cell: UITableViewCell, with item: ChecklistItem) {
         let label = cell.viewWithTag(1001) as! UILabel
+        label.textColor = view.tintColor
         
         if item.checked {
             label.text = "√"
@@ -133,7 +134,9 @@ class ChecklistViewController: UITableViewController, ItemDetailViewControllerDe
     // Fill the text label
     func configureText(for cell: UITableViewCell, with item: ChecklistItem) {
         let label = cell.viewWithTag(1000) as! UILabel
-        label.text = item.text
+        
+        // label.text = item.text
+        label.text = "\(item.itemID): \(item.text)"
     }
     /*
     func documentsDirectory() -> URL {

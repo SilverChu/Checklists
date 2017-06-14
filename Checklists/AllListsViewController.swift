@@ -90,7 +90,7 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
         cell.textLabel!.text = checklist.name
         cell.accessoryType = .detailDisclosureButton
 
-        let count = checklist.countUncheckdItems()
+        let count = checklist.countUncheckedItems()
         if checklist.items.count == 0 {
             cell.detailTextLabel!.text = "(No Items)"
         } else if count == 0{
