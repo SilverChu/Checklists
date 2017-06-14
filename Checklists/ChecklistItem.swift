@@ -37,6 +37,10 @@ class ChecklistItem: NSObject, NSCoding {
         itemID = DataModel.nextChecklistItemID()
         super.init()
     }
+    
+    deinit {
+        removeNotification()
+    }
  
     /*
     init(text: String, checked: Bool) {
@@ -51,6 +55,8 @@ class ChecklistItem: NSObject, NSCoding {
     }
     
     func scheduleNotification() {
+        removeNotification()
+        
         if shouldRemind && dueDate > Date() {
             let content = UNMutableNotificationContent()
             content.title = "Reminder:"
@@ -69,6 +75,11 @@ class ChecklistItem: NSObject, NSCoding {
             
             print("Scheduled notification \(request) for itemID \(itemID)")
         }
+    }
+    
+    func removeNotification() {
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: ["\(itemID)"])
     }
     
 }
