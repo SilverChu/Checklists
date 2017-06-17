@@ -17,7 +17,7 @@ protocol ListDetailViewControllerDelegate: class {
 
 class ListDetailViewController: UITableViewController, UITextFieldDelegate, IconPickerViewControllerDelegate {
     var checklistToEdit: Checklist?
-    var iconName = "Folder"
+    var iconName = "Folder" // 默认Folder图标
     weak var delegate: ListDetailViewControllerDelegate?
     
     @IBOutlet weak var textField: UITextField!
@@ -48,7 +48,7 @@ class ListDetailViewController: UITableViewController, UITextFieldDelegate, Icon
             doneBarButton.isEnabled = true
             iconName = checklist.iconName
         }
-        iconImageView.image = UIImage(named: iconName)
+        iconImageView.image = UIImage(named: iconName) // 读取后设置image
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -58,6 +58,7 @@ class ListDetailViewController: UITableViewController, UITextFieldDelegate, Icon
     }
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        // 当点击到section == 1时，就可以触发segue来选择icon
         if indexPath.section == 1 {
             return indexPath
         } else {

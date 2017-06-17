@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import UserNotifications
 
+// Delegate - Step 1 声明被代理对象协议
 protocol ItemDetailViewControllerDelegate: class {
     func itemDetailViewControllerDidCancel(_ controller: ItemDetailViewController)
     func itemDetailViewController(_ controller: ItemDetailViewController, didFinishAdding item: ChecklistItem)
@@ -17,10 +18,10 @@ protocol ItemDetailViewControllerDelegate: class {
 }
 
 class ItemDetailViewController: UITableViewController, UITextFieldDelegate {
-    weak var delegate: ItemDetailViewControllerDelegate?
-    var itemToEdit: ChecklistItem? // pass the data when editing item
+    weak var delegate: ItemDetailViewControllerDelegate? // Delegate - Step 2 声明一个弱引用的Optional代理协议对象
+    var itemToEdit: ChecklistItem? // 执行ChecklistViewController中的prepare-for-segue方法时将item数据传递过来
     var dueDate = Date()
-    var datePickerVisible = false
+    var datePickerVisible = false // date picker是否显示在屏幕下
     
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var doneBarButton: UIBarButtonItem!
@@ -30,7 +31,7 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate {
     @IBOutlet weak var datePicker: UIDatePicker!
     
     @IBAction func cancel() {
-        delegate?.itemDetailViewControllerDidCancel(self)
+        delegate?.itemDetailViewControllerDidCancel(self) // Delegate - Step 3 触发对应事件时，发送信息给其代理（ChecklistViewController)
     }
     
     @IBAction func done() {
@@ -40,7 +41,7 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate {
             item.dueDate = dueDate
             item.scheduleNotification()
             
-            delegate?.itemDetailViewController(self, didFinishEditing: item)
+            delegate?.itemDetailViewController(self, didFinishEditing: item) // Delegate - Step 3 触发对应事件时，发送信息给其代理（ChecklistViewController)
         } else {
             let item = ChecklistItem()
             item.text = textField.text!
@@ -49,7 +50,7 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate {
             item.dueDate = dueDate
             item.scheduleNotification()
             
-            delegate?.itemDetailViewController(self, didFinishAdding: item)
+            delegate?.itemDetailViewController(self, didFinishAdding: item) // Delegate - Step 3 触发对应事件时，发送信息给其代理（ChecklistViewController)
         }
         
     }
@@ -70,14 +71,16 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate {
         }
     }
     
+    // 这个方法告诉View Controller该视图即将被添加到视图的层次结构中
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        textField.becomeFirstResponder()
+        textField.becomeFirstResponder() // textField作为进入这个window的第一个响应者
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // view加载后判断是否为编辑item，如果是，就将相应的信息传递过来
         if let item = itemToEdit {
             title = "Edit Item"
             textField.text = item.text
@@ -89,7 +92,7 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate {
         updateDueDateLabel()
     }
     
-    // This method prevents users select the cell.
+    // UITableView的Delegate中的方法，告诉delegate在某一个row被选中前执行的操作
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if indexPath.section == 1 && indexPath.row == 1 {
             return indexPath
@@ -156,7 +159,7 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate {
         
         formatter.dateStyle = .medium
         formatter.timeStyle = .short
-        dueDateLabel.text = formatter.string(from: dueDate)
+        dueDateLabel.text = formatter.string(from: dueDate) // 将Date转换为text
     }
     
     func showDatePicker() {
@@ -169,12 +172,13 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate {
             dateCell.detailTextLabel!.textColor = dateCell.detailTextLabel!.tintColor
         }
         
+        // 更新table view来插入date picker和重载date栏
         tableView.beginUpdates()
         tableView.insertRows(at: [indexPathDatePicker], with: .fade)
         tableView.reloadRows(at: [indexPathDateRow], with: .none)
         tableView.endUpdates()
         
-        datePicker.setDate(dueDate, animated: false)
+        datePicker.setDate(dueDate, animated: false) // 设置当前时间为默认值
     }
     
     func hideDatePicker() {

@@ -12,10 +12,11 @@ import UserNotifications
 class ChecklistItem: NSObject, NSCoding {
     var text = ""
     var checked = false
-    var dueDate = Date()
-    var shouldRemind = false
+    var dueDate = Date() // 到期日字段
+    var shouldRemind = false // 是否提醒字段
     var itemID: Int
     
+    // 使用NSCoding System的话必须实现下面两个方法，用于写入和读取plist中数据
     func encode(with aCoder: NSCoder) {
         aCoder.encode(text, forKey: "Text")
         aCoder.encode(checked, forKey: "Checked")
@@ -34,7 +35,7 @@ class ChecklistItem: NSObject, NSCoding {
     }
     
     override init() {
-        itemID = DataModel.nextChecklistItemID()
+        itemID = DataModel.nextChecklistItemID() // 每次构造一个item对象时，设置一个itemID给它
         super.init()
     }
     
@@ -50,10 +51,12 @@ class ChecklistItem: NSObject, NSCoding {
     }
     */
     
+    // 点击切换ChecklistItem中checked状态
     func toggleChecked() {
         checked =  !checked
     }
     
+    // 安排提醒任务
     func scheduleNotification() {
         removeNotification()
         
